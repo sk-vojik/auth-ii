@@ -26,6 +26,7 @@ server.post('/api/register', (req, res) => {
   const hash = bcrypt.hashSync(user.password, 10);
   user.password = hash;
 
+
   Users.add(user)
     .then(saved => {
       res.status(201).json(saved);
@@ -92,7 +93,7 @@ function restricted(req, res, next) {
 
 
 //GET users
-server.get('/api/users', restricted, (req, res) => {
+server.get('/api/users', (req, res) => {
   Users.find()
     .then(users => {
       res.json(users);
@@ -107,9 +108,6 @@ server.get('/api/users', restricted, (req, res) => {
 
 
 
-server.get('/', (req, res) => {
-  res.send("It's workingGgGgGgGgGgGGGG!!!!11")
-});
 
 
 const port = process.env.PORT || 8000;
