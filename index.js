@@ -71,10 +71,28 @@ server.post('/api/login', (req, res) => {
   
 });
 
+//RESTRICTION FUNCTION
+function restricted(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token) {
+    jwt.verify(token, secret, (err, decodedToken) => {
+      if (err) {
+        res.status(401).json({ message: "Invalid credentials" })
+      } else {
+        req.decodedJwt = decodedToken;
+        next();
+      }
+    })
+  } else {
+    res.status(401).json({ message: "Something went wrong" });
+  }
+}
+
 
 
 //GET users
-server.get('/api/users', (req, res) => {
+server.get('/api/users', restricted, (req, res) => {
   Users.find()
     .then(users => {
       res.json(users);
